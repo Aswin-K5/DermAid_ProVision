@@ -1,25 +1,24 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Home from './components/Home';
-import About from './components/About';
-import Scan from './components/Scan';
-import Derm from './components/Derm';
-import Navbar from './components/Navbar';
 import './App.css'
-
+import Home from "./components/Home";
+import Derm from "./components/Derm";
+import Scans from "./components/Scans";
+import About from "./components/About";
+import Navbar from './components/Navbar';
 const App = () => {
   return (
-    <> 
-    <BrowserRouter>
+    <div>
+      <Navbar/>
+      <BrowserRouter>
         <Routes>
-            <Route path = '/' element = {<Home />} />
-            <Route path = '/Scan' element = {<Scan />} />
-            <Route path = '/About' element = {<About />} />
-            <Route path = '/Derm' element = {<Derm />} />
+          <Route path = '/' element = {<Home />}/>
+          <Route path = '/Derm' element = {<Derm />}/>
+          <Route path = '/Scans' element = {<Scans />}/>
+          <Route path = '/About' element = {<About />}/>
         </Routes>
-    </BrowserRouter>
-    {/* <Home /> */}
-    </>
+      </BrowserRouter>
+    </div>
   );
 };
 

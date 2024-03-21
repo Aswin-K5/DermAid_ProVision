@@ -1,15 +1,26 @@
 import React from "react";
-// import Navbar from "./Navbar";
-import "./styles/Home.css";
+import "../styles/Home.css";
+
 const Home = () => {
   return (
-    <div className="wrapper">
-      {/* {<Navbar />} */}
-      <div className="container1">
-        Here is Where Technology Meets Expertise, Unleashing Precision in Skin
-        Health - Your Personalized Dermatology Companion!
-      </div>
+    <>
+    <div className="containerHome">
+      <li className="homel">Here is Where Technology Meets Expertise, Unleashing Precision in Skin
+      Health - Your Personalized Dermatology Companion!</li> 
     </div>
+    <div className="containerHome">
+    <li className="homel">With DermAid Provision,
+      you'll experience the perfect synergy of innovation and expertise,
+      resulting in a personalized dermatology companion like no other. </li>
+    </div>
+    <div className="scantext">
+    To Scan the skin or upload image click on the button below
+    </div>
+    <div className="butt"><button type="submit" className="bt">
+      DermScan
+    </button></div>
+    
+    </>
   );
 };
 
