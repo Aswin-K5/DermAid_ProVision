@@ -1,0 +1,42 @@
+.derm-parent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 180px;
+}
+
+.derm-left{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width:70%;
+    font-size: 30px;
+    color: #fff;
+}
+
+.derm-right{
+    display: flex;
+    align-items: center;
+    width:30%;
+}
+
+.derm-left img{
+    width: 600px;
+    height: 500px;
+    padding: 10px;
+}
+
+.derm-right ul{
+    list-style: none;
+    font-size: xx-large;
+}
+
+.derm-right ul li{
+    padding: 7px;
+}
+
+.derm-right ul .mapdb{
+    color: #f2f2f2;
+    position: relative;
+    left: 20%;
+}
