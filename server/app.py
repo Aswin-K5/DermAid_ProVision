@@ -4,31 +4,33 @@ from fastapi import FastAPI, File, UploadFile
 from PIL import Image
 import numpy as np
 import tensorflow as tf
-import shutil
+import io
 
 app = FastAPI()
 
+# Define allowed origins
 origins = [
-    "*"
+   "*"
 ]
 
+# CORS settings
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["POST"],
     allow_headers=["*"],
 )
 
 # Load the saved CNN model
-model = tf.keras.models.load_model("models\ResNet50_ISIC_2019.h5")
+model = tf.keras.models.load_model("models/Custom_ResNet.h5")
 
 def preprocess_image(file):
     # Open the image file
     img = Image.open(file)
 
     # Resize the image to match the input shape
-    img = img.resize((256, 256))
+    img = img.resize((64, 64))  # Adjust the size to match the model's input shape
 
     # Convert the image to RGB if it's not already in RGB format
     if img.mode != 'RGB':
@@ -47,7 +49,7 @@ def preprocess_image(file):
 
     return img_array
 
-def predict_eye_condition(processed_image):
+def predict_skin_condition(processed_image):
     # Perform inference
     prediction = model.predict(processed_image)
 
@@ -58,53 +60,32 @@ def get_predicted_class(prediction_result):
     predicted_class_index = np.argmax(prediction_result)
 
     # Map the index to the corresponding class name
-    class_names = ['Cataract', 'Normal']
+    class_names = ['Actinic Keratosis', 'Squamous Cell Carcinoma', 'Melanoma', 'Basal Cell Carcinoma', 'Vascular Lesion']
     predicted_class = class_names[predicted_class_index]
 
     return predicted_class
 
-
-
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
+    try:
+        contents = await file.read()
+        processed_image = preprocess_image(io.BytesIO(contents))
+        prediction_result = predict_skin_condition(processed_image)
+        predicted_class = get_predicted_class(prediction_result)
+        # Provide meaningful descriptions based on predicted class
+        description = "Placeholder description"
+        if predicted_class == "Actinic Keratosis":
+            description = "Actinic Keratosis description"
+        elif predicted_class == "Squamous Cell Carcinoma":
+            description = "Squamous Cell Carcinoma description"
+        # Add descriptions for other classes as needed
+        return {"prediction": predicted_class, "prediction_desc": description}
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-
-@app.post("/predict")
-def predict(file: UploadFile = File(...)):
-    print(file)
-    if file.filename == '':
-        pass  # Do nothing if filename is empty
-
-    try:
-        with open(file.filename, 'wb') as f:
-            shutil.copyfileobj(file.file, f)
-    except Exception:
-        return {"message": "There was an error uploading the file"}
-    finally:
-        file.file.close()  # Close the file object
-
-    # Process the uploaded image
-    processed_image = preprocess_image(file.filename)
-    
-    # Get the prediction result
-    prediction_result = predict_eye_condition(processed_image)
-    
-    # Get the predicted class
-    predicted_class = get_predicted_class(prediction_result)
-    
-    # Generate content based on the predicted class
-    if predicted_class == 'Normal':
-        content_title = "Normal Eyes"
-        content = "Your eyes are normal. No need to worry! However, it's still essential to have regular check-ups."
-    else:
-        content_title = "Cataract Detected"
-        content = "Cataract has been detected. Please consult an ophthalmologist for further evaluation and treatment."
-    
-    # Return the prediction result
-    return {"prediction": predicted_class, "prediction-desc": content_title, "content": content}
-
-
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):

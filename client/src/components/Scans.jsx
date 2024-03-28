@@ -1,100 +1,99 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Scans.css";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
-const Scans = () => {
+export default function Scans() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [predictions, setPredictions] = useState([]);
+  const [file, setFile] = useState(null);
+  const [prediction, setPrediction] = useState(null); 
+  const [predictionDesc, setPredictionDesc] = useState(null);
+  const [error, setError] = useState(null);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setSelectedImage(reader.result);
+  useEffect(() => {
+    axios.get("http://localhost:8000/")
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const handleChange = (e) => {
+    setFile(e.target.files[0]);
+    const f1 = e.target.files[0];
+    if (f1) {
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        setSelectedImage(e.target.result);
       };
-      reader.readAsDataURL(file);
+      fileReader.readAsDataURL(f1);
     }
   };
 
-  const handleClearImage = () => {
-    setSelectedImage(null);
-    setPredictions([]);
-  };
-
-  const fetchResult = () => {
+  const uploadImage = async () => {
     const formData = new FormData();
-    formData.append("file", selectedImage);
-
-    fetch("/predict", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setPredictions(data);
-      })
-      .catch((error) => console.error("Error:", error));
+    formData.append("file", file);
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/predict", formData);
+      if (response.data) {
+        console.log(response.data);
+        setPrediction(response.data["prediction"]);
+        setPredictionDesc(response.data["prediction_desc"]);
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setError("Error predicting result. Please try again.");
+    }
   };
 
   return (
-    <div className="containerScans">
-      <div className="leftscan">
-        <p className="scan-p">
-          Upload your image below or click here to open up the camera to scan
-        </p>
-        <div className="image-container">
-          {selectedImage ? (
-            <>
-              <img src={selectedImage} alt="Selected" />
-            </>
-          ) : (
-            <p className="scan-p">No image selected</p>
+    <>
+      <section>
+        <h1 className="cataract-title">Cataract Scanner</h1>
+        <center>
+          <p className="cataract-desc">
+            Scan your eye image to detect cataracts early and protect your
+            vision. Take action today!
+          </p>
+          <div className="cataract-file">
+            <form>
+              <input type="file" onChange={handleChange} />
+            </form>
+          </div>
+          {selectedImage && (
+            <img
+              className="predicted-img"
+              src={selectedImage}
+              alt="Selected"
+              style={{ maxWidth: "100%", maxHeight: "200px" }}
+            />
           )}
-        </div>
-        <div className="scan-bt">
-          <input
-            type="file"
-            onChange={handleFileChange}
-            className="input-scan"
-            accept="image/*"
-          />
-          <button onClick={handleClearImage} className="scan-clear">
-            Clear
-          </button>
-        </div>
-        <button type="button" className="scbt" onClick={fetchResult}>
-          Fetch Result
+        </center>
+        {prediction && predictionDesc && (
+          <>
+            <div className="prediction-results">
+              <h1>Prediction: {prediction}</h1>
+            </div>
+            <div className="prediction-results">
+              <h1>Prediction-Result: {predictionDesc}</h1>
+            </div>
+          </>
+        )}
+        {error && (
+          <div className="error-message">
+            <p>{error}</p>
+          </div>
+        )}
+        <button
+          onClick={() => {
+            uploadImage();
+          }}
+          className="cataract-predict-result"
+        >
+          Predict Result
         </button>
-        <div className="prediction">
-          <p className="scan-head">Predictions:</p>
-          <ul className="scan-predict">
-            {predictions.map((prediction, index) => (
-              <li key={index}>{prediction.label}: {prediction.probability}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div className="rightscan">
-      <p className="scan-head">Results:</p>
-        <p className="prediction">
-          Predictions: <span className="scan-predict">______________</span>
-        </p>
-        <p className="scan-head">Remedies :</p>
-        <p className="remedies">
-          <ol className="rem">
-            <li>*********</li>
-            <li>*********</li>
-            <li>*********</li>
-            <li>*********</li>
-          </ol>
-        </p>
-        <button type="submit" className="scbt1">
-          <Link to='/Derm'style={{ textDecoration: "none" ,backgroundColor: "#06DBF8", color:"#fff"}}>Contact Nearby Dermatoligist</Link>
-        </button>
-      </div>
-    </div>
+      </section>
+    </>
   );
-};
-
-export default Scans;
+}
