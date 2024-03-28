@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "../styles/Scans.css";
 import { Link } from "react-router-dom";
+
 const Scans = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [predictions, setPredictions] = useState([]);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -17,6 +19,22 @@ const Scans = () => {
 
   const handleClearImage = () => {
     setSelectedImage(null);
+    setPredictions([]);
+  };
+
+  const fetchResult = () => {
+    const formData = new FormData();
+    formData.append("file", selectedImage);
+
+    fetch("/predict", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setPredictions(data);
+      })
+      .catch((error) => console.error("Error:", error));
   };
 
   return (
@@ -45,12 +63,20 @@ const Scans = () => {
             Clear
           </button>
         </div>
-        <button type="button" className="scbt">
+        <button type="button" className="scbt" onClick={fetchResult}>
           Fetch Result
         </button>
+        <div className="prediction">
+          <p className="scan-head">Predictions:</p>
+          <ul className="scan-predict">
+            {predictions.map((prediction, index) => (
+              <li key={index}>{prediction.label}: {prediction.probability}</li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div className="rightscan">
-        <p className="scan-head">Results:</p>
+      <p className="scan-head">Results:</p>
         <p className="prediction">
           Predictions: <span className="scan-predict">______________</span>
         </p>
