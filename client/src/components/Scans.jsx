@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Scans.css";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
-export default function Scans() {
+const Scans = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [file, setFile] = useState(null);
-  const [prediction, setPrediction] = useState(null); 
-  const [predictionDesc, setPredictionDesc] = useState(null);
+  const [prediction, setPrediction] = useState("__________");
+  const [predictionDesc, setPredictionDesc] = useState("____________");
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/")
+    axios
+      .get("http://localhost:8000/")
       .then((response) => {
         console.log(response);
       })
@@ -35,7 +37,10 @@ export default function Scans() {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/predict", formData);
+      const response = await axios.post(
+        "http://127.0.0.1:8000/predict",
+        formData
+      );
       if (response.data) {
         console.log(response.data);
         setPrediction(response.data["prediction"]);
@@ -47,53 +52,49 @@ export default function Scans() {
     }
   };
 
+  const handleClearImage = () => {
+    setSelectedImage(null);
+  };
+
   return (
-    <>
-      <section>
-        <h1 className="cataract-title">Cataract Scanner</h1>
-        <center>
-          <p className="cataract-desc">
-            Scan your eye image to detect cataracts early and protect your
-            vision. Take action today!
-          </p>
-          <div className="cataract-file">
-            <form>
-              <input type="file" onChange={handleChange} />
-            </form>
-          </div>
-          {selectedImage && (
-            <img
-              className="predicted-img"
-              src={selectedImage}
-              alt="Selected"
-              style={{ maxWidth: "100%", maxHeight: "200px" }}
-            />
+    <div className="containerScans">
+      <div className="leftscan">
+        <p className="scan-p">
+          Upload your image below or click here to open up the camera to scan
+        </p>
+        <div className="image-container">
+          {selectedImage ? (
+            <img src={selectedImage} alt="Selected" />
+          ) : (
+            <p className="scan-p">No image selected</p>
           )}
-        </center>
-        {prediction && predictionDesc && (
-          <>
-            <div className="prediction-results">
-              <h1>Prediction: {prediction}</h1>
-            </div>
-            <div className="prediction-results">
-              <h1>Prediction-Result: {predictionDesc}</h1>
-            </div>
-          </>
-        )}
-        {error && (
-          <div className="error-message">
-            <p>{error}</p>
-          </div>
-        )}
-        <button
-          onClick={() => {
-            uploadImage();
-          }}
-          className="cataract-predict-result"
-        >
-          Predict Result
+        </div>
+        <div className="scan-bt">
+          <input
+            type="file"
+            onChange={handleChange}
+            className="input-scan"
+            accept="image/*"
+          />
+          {selectedImage && (
+            <button onClick={handleClearImage} className="scan-clear">
+              Clear
+            </button>
+          )}
+        </div>
+        <button onClick={uploadImage} className="scbt">
+          Fetch Result
         </button>
-      </section>
-    </>
+      </div>
+      <div className="rightscan">
+        <p className="scan-head">Results:</p>
+        <h2 className="prediction">Prediction: {prediction}</h2>
+        <p className="scan-head">Remedies:</p>
+        <p className="rem">{predictionDesc}</p>
+        <Link to='/Derm' ><button className="scbt1">Contact Nearby Dermatologist</button></Link>
+      </div>
+    </div>
   );
-}
+};
+
+export default Scans;

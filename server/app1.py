@@ -23,14 +23,14 @@ app.add_middleware(
 )
 
 # Load the saved CNN model
-model = tf.keras.models.load_model("models/Custom_ResNet.h5")
+model = tf.keras.models.load_model("models/Leukemia_classify.keras")
 
 def preprocess_image(file):
     # Open the image file
     img = Image.open(file)
 
     # Resize the image to match the input shape
-    img = img.resize((64, 64))  # Adjust the size to match the model's input shape
+    img = img.resize((180, 180))  # Adjust the size to match the model's input shape
 
     # Convert the image to RGB if it's not already in RGB format
     if img.mode != 'RGB':
@@ -60,7 +60,7 @@ def get_predicted_class(prediction_result):
     predicted_class_index = np.argmax(prediction_result)
 
     # Map the index to the corresponding class name
-    class_names = ['Actinic Keratosis', 'Squamous Cell Carcinoma', 'Melanoma', 'Basal Cell Carcinoma', 'Vascular Lesion']
+    class_names = ['ALL','AML','CLL','CML', 'NORMAL']
     predicted_class = class_names[predicted_class_index]
 
     return predicted_class
@@ -73,18 +73,12 @@ async def predict(file: UploadFile = File(...)):
         prediction_result = predict_skin_condition(processed_image)
         predicted_class = get_predicted_class(prediction_result)
         # Provide meaningful descriptions based on predicted class
-        description = "Placeholder description"
-        if predicted_class == "Actinic Keratosis":
+        description = "ALL"
+        if predicted_class == "All":
             description = "Actinic Keratosis description"
-        elif predicted_class == "Squamous Cell Carcinoma":
+        elif predicted_class == "AML":
             description = "Squamous Cell Carcinoma description"
         # Add descriptions for other classes as needed
-        elif predicted_class == "Melanoma":
-            description = "Melanoma desc"
-        elif predicted_class == "Basal Cell Carcinoma":
-            description = "Basal Cell Carcinoma desc"
-        elif predicted_class == "Vascular Lesion":
-            description = "Vascular Lesion desc"
         return {"prediction": predicted_class, "prediction_desc": description}
     except Exception as e:
         return {"error": str(e)}

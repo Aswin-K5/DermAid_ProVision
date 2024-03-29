@@ -26,6 +26,7 @@
   display: flex;
   width: 50%;
     /* justify-content: center; */
+  /* border: 1px solid white; */
 }
 
 .ig {
@@ -65,15 +66,17 @@
   display: flex;
   color: #fff;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   margin-bottom: 30px;
   border-style: double;
   border-radius: 20px;
 }
 
 .image-container img {
-  max-width: 100%;
+  width: 120%;
   max-height: 100%;
+  border-radius: 15px;
+
 }
 
 .scan-bt {
@@ -87,9 +90,11 @@
 
 .scan-clear {
   /* border: 2px solid #fff; */
+  position: absolute;
   color: #000;
   margin-top: 10px;
   font-size: medium;
+  right: 160px;
   width: 100px;
   height: max-content;
   background-color: #fff;
@@ -103,14 +108,16 @@
   /* margin: 30px; */
 }
 .scan-head {
-  font-size: 45px;
+  font-size: 40px;
   display: flex;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .prediction{
-  font-size: 30px;
-  text-align: center;
+  font-size: 25px;
+  /* text-align: center; */
+  margin-left: 6em;
+  color: #fff;
 }
 
 .scan-predict{
@@ -118,21 +125,21 @@
   color: #fff;
 }
 
-.remedies .rem{
+.remedies {
   list-style: none;
   font-size: 30px;
 }
 
-.remedies .rem li{
+.rem {
   color: #fff;
   line-height: normal;
   text-align: justify;
-  margin-left: 6em;
+  margin-left: 10em;
 }
 
 .scbt1
 {
-  margin-top: 10px;
+  margin-top: 80px;
   background-color: #06dbf8;
   border: 2px solid #fff;
   color: white;
@@ -146,5 +153,5 @@
   cursor: pointer;
   width: max-content; 
   position: relative;
-  left:150px;  
+  left:180px;  
 }
