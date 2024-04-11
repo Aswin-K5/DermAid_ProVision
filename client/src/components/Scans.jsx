@@ -7,8 +7,11 @@ import axios from "axios";
 const Scans = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [file, setFile] = useState(null);
-  const [prediction, setPrediction] = useState("__________");
-  const [predictionDesc, setPredictionDesc] = useState("____________");
+  const [prediction, setPrediction] = useState("");
+  const [predictionDesc, setPredictionDesc] = useState("");
+  const [treatment1, setTreatment1] = useState("");
+  const [treatment2, setTreatment2] = useState("");
+  const [treatment3, setTreatment3] = useState("");
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
@@ -35,6 +38,9 @@ const Scans = () => {
         console.log(response.data);
         setPrediction(response.data["prediction"]);
         setPredictionDesc(response.data["prediction_desc"]);
+        setTreatment1(response.data["treat1"]);
+        setTreatment2(response.data["treat2"]);
+        setTreatment3(response.data["treat3"]);
       }
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -77,10 +83,16 @@ const Scans = () => {
         </button>
       </div>
       <div className="rightscan">
-        <p className="scan-head">Results:</p>
-        <h2 className="prediction">Prediction: {prediction}</h2>
-        <p className="scan-head">Remedies:</p>
-        <p className="rem">{predictionDesc}</p>
+        <p className="scan-head">Disease Prediction:
+        <h2 className="prediction">{prediction}</h2></p>
+        <p className="scan-head">Description of {prediction}</p>
+        <p className="desc">{predictionDesc}</p>
+        <p className="scan-head">Treatment that can be done to cure:</p>
+        <ul className="rem">
+          <li>{treatment1}</li>
+          <li>{treatment2}</li>
+          <li>{treatment3}</li>
+        </ul>
         <Link to="/Derm">
           <button className="scbt1">Contact Nearby Dermatologist</button>
         </Link>
