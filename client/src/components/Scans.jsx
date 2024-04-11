@@ -97,6 +97,7 @@ const Scans = () => {
           <button className="scbt1">Contact Nearby Dermatologist</button>
         </Link>
       </div>
+      
     </div>
   );
 };

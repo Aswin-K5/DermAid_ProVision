@@ -20,7 +20,7 @@
   
 }
 .derm-left:hover{
-    box-shadow: -30px 10px 50px 3px rgba(35, 200, 215, 0.736);
+    box-shadow: 0 0 10px rgb(35, 200, 215);
 }
 
 .derm-left p {

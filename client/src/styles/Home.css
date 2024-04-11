@@ -55,3 +55,34 @@
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
+
+.videos-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 50px auto;
+  max-width: 1300px;
+  border-left: 3px solid #06dcf877;
+  border-right: 3px solid #06dcf877;
+  border-top-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+.video {
+  padding: 20px;
+  width: 40%;
+  gap:30px;
+}
+
+.video iframe {
+  width: 100%;
+  height: 250px;
+  border-radius: 20px;
+  transition: 0.6s ease-in-out;
+  box-shadow: 0px 0px 50px #06dcf875;
+}
+
+.video iframe:hover{
+  box-shadow: 0px 0px 10px 6px #06dcf880;
+  transform: translate(10px,-20px);
+  /* transform: translateX(-10px); */
+}
