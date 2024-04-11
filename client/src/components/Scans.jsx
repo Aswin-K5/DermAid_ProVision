@@ -1,3 +1,4 @@
+// Scans.jsx
 import React, { useEffect, useState } from "react";
 import "../styles/Scans.css";
 import { Link } from "react-router-dom";
@@ -9,17 +10,6 @@ const Scans = () => {
   const [prediction, setPrediction] = useState("__________");
   const [predictionDesc, setPredictionDesc] = useState("____________");
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/")
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
 
   const handleChange = (e) => {
     setFile(e.target.files[0]);
@@ -91,10 +81,11 @@ const Scans = () => {
         <h2 className="prediction">Prediction: {prediction}</h2>
         <p className="scan-head">Remedies:</p>
         <p className="rem">{predictionDesc}</p>
-        <Link to='/Derm' ><button className="scbt1">Contact Nearby Dermatologist</button></Link>
+        <Link to="/Derm">
+          <button className="scbt1">Contact Nearby Dermatologist</button>
+        </Link>
       </div>
     </div>
   );
 };
-
 export default Scans;

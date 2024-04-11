@@ -21,16 +21,227 @@ app.add_middleware(
     allow_methods=["POST"],
     allow_headers=["*"],
 )
-
 # Load the saved CNN model
-model = tf.keras.models.load_model("models/Leukemia_classify.keras")
-
+model = tf.keras.models.load_model("models/model_VGG16.keras")
 def preprocess_image(file):
     # Open the image file
     img = Image.open(file)
 
     # Resize the image to match the input shape
-    img = img.resize((180, 180))  # Adjust the size to match the model's input shape
+    img = img.resize((224, 224
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      ))  # Adjust the size to match the model's input shape
 
     # Convert the image to RGB if it's not already in RGB format
     if img.mode != 'RGB':
@@ -74,10 +285,19 @@ async def predict(file: UploadFile = File(...)):
         predicted_class = get_predicted_class(prediction_result)
         # Provide meaningful descriptions based on predicted class
         description = "ALL"
-        if predicted_class == "All":
+        if predicted_class == "All desc":
             description = "Actinic Keratosis description"
         elif predicted_class == "AML":
-            description = "Squamous Cell Carcinoma description"
+            description = "AML desc"
+        elif predicted_class == "CLL":
+            description = "CLL desc"
+        elif predicted_class == "CML":
+            description = "CML desc"
+        elif predicted_class == "NORMAL":
+            description = "Normal desc"
+        else:
+            predicted_class = "Invalid"
+            description = "Invlaid"
         # Add descriptions for other classes as needed
         return {"prediction": predicted_class, "prediction_desc": description}
     except Exception as e:

@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "fastapi": "^0.0.8"
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "fastapi": "^0.0.8",
+    "nodemon": "^3.1.0"
   }
 }
