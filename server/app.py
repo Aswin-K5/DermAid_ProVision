@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 # Load the saved CNN model
-model = tf.keras.models.load_model("models/Sequential.h5")
+model = tf.keras.models.load_model("models/Custom_ResNet.h5")
 
 def preprocess_image(file):
     # Open the image file

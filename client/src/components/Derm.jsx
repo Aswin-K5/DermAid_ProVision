@@ -3,6 +3,8 @@ import "../styles/Derm.css";
 import "@googlemaps/extended-component-library/overlay_layout.js";
 
 const Derm = () => {
+  const api = import.meta.env.VITE_API_KEY;
+  console.log(api);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +38,7 @@ const Derm = () => {
             width="100%"
             height="500px"
             frameBorder="0"
-            src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&q=dermatologist+near+me&center=${latitude},${longitude}&zoom=13&maptype=roadmap`}
+            src={`https://www.google.com/maps/embed/v1/search?key=${api}&q=dermatologist+near+me&center=${latitude},${longitude}&zoom=13&maptype=roadmap`}
             allowFullScreen
           ></iframe>
         ) : (
